@@ -1,10 +1,78 @@
 [
   {
     "id": "1",
-    "nombre_platillo": "pastel de chocolate"
+    "zona": "norte",
+    "restaurantes": [
+      {
+        "id": "1",
+        "nombre": "Kal",
+        "platillos": [
+          {
+            "id": "1",
+            "platillo": "pastel"
+          },
+          {
+            "id": "2",
+            "platillo": "hamburguesas"
+          },
+          {
+            "id": "3",
+            "platillo": "pizza"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "nombre": "Val",
+        "platillos": [
+          {
+            "id": "1",
+            "platillo": "carnes"
+          },
+          {
+            "id": "2",
+            "platillo": "pastas"
+          },
+          {
+            "id": "3",
+            "platillo": "frituras"
+          }
+        ]
+      }
+    ]
   },
   {
     "id": "2",
-    "nombre_platillo": "pizza mexicana"
+    "zona": "centro",
+    "restaurantes": [
+      {
+        "id": "1",
+        "nombre": "Sal",
+        "platillos": [
+          {
+            "id": "1",
+            "platillo": "pescados"
+          },
+          {
+            "id": "2",
+            "platillo": "vinos y licores"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "nombre": "Mal",
+        "platillos": [
+          {
+            "id": "1",
+            "platillo": "camarones"
+          },
+          {
+            "id": "2",
+            "platillo": "quesos"
+          }
+        ]
+      }
+    ]
   }
 ]
