@@ -1,0 +1,22 @@
+{
+  "name": "uber-eats",
+  "version": "1.0.0",
+  "description": "proyecto semana 1 uber-eats-api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec babel-node src/index"
+  },
+  "author": "Christian Gomez",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "@babel/node": "^7.8.4",
+    "@babel/preset-env": "^7.8.6",
+    "nodemon": "^2.0.2"
+  }
+}
