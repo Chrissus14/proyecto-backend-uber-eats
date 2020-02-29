@@ -2,13 +2,6 @@ import { Router } from 'express';
 import data from '../data.json';
 const router = Router();
 
-/**
-  const zona = data.find(zona => zona.id === '1');
-  const restaurantes = zona.restaurantes;
-  const restaurant = restaurantes.find(res => res.id === '1');
-  const platillos = restaurant.platillos;
-  const platillo = platillos.find(plat => plat.id === '1');
- */
 const cart = [];
 
 // Obtiene todas las zonas
@@ -37,6 +30,23 @@ router.get('/zonas/:zona/restaurantes/:id/platillos', (req, res) => {
   const restaurant = restaurantes.find(res => res.id === restauranteUrl);
   const platillos = restaurant.platillos;
   res.json(platillos);
+});
+
+// Añadir pedido de platillo
+router.post('/pedidos', (req, res) => {
+  const zonaParam = req.body.zona;
+  const restauranteParam = req.body.restaurante;
+  const platilloParam = req.body.platillo;
+  const zona = data.find(zone => zone.zona === zonaParam);
+  const restaurantes = zona.restaurantes.find(res => res.restaurante === restauranteParam);
+  const platillo = restaurantes.platillos.find(plat => plat.platillo === platilloParam);
+
+  cart.push(platillo);
+
+  res.json(platillo);
+
+  // if (!platillo) res.status(404).json({ error: 'No existe ese platillo' });
+  // res.json(platillo);
 });
 
 module.exports = router;
