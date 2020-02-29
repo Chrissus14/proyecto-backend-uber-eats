@@ -3,6 +3,7 @@ import data from '../data.json';
 const router = Router();
 
 const cart = [];
+const compra = [];
 
 // Obtiene todas las zonas
 router.get('/zonas', (req, res) => {
@@ -57,6 +58,25 @@ router.get('/deseleccionar/:id', (req, res) => {
   const indice = cart.indexOf(quitar);
   const platilloEliminado = cart.splice(indice, 1);
   res.json({ eliminado: platilloEliminado });
+});
+
+// Obtiene todos los platillos del carrito
+router.get('/micarrito', (req, res) => {
+  if (cart.length === 0) res.status(404).json({ error: 'No tienes pedidos aun' });
+  res.json(cart);
+});
+
+// Borrar elementos del array, cancelar pedido
+router.get('/cancelar', (req, res) => {
+  cart.splice(0);
+  res.json({ cancel: 'Pedido cancelado' });
+});
+
+//
+router.get('/confirmar', (req, res) => {
+  compra.push(cart);
+  res.json({ status: 'confirmado', pedidos: compra });
+  cart.splice(0);
 });
 
 module.exports = router;
