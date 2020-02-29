@@ -9,10 +9,16 @@ const router = Router();
   const platillos = restaurant.platillos;
   const platillo = platillos.find(plat => plat.id === '1');
  */
+const cart = [];
 
-router.get('/restaurantes/:zona', (req, res) => {
+// Obtiene todas las zonas
+router.get('/zonas', (req, res) => {
+  res.json(data.map(zona => zona));
+});
+
+// Obtiene todos los restaurantes por zona
+router.get('/zonas/:zona/restaurantes', (req, res) => {
   const zonaParam = req.params.zona;
-  // const restaurantes = data.find(zona => zona.zona === zonaParam).restaurantes;
   if (zonaParam === 'norte') {
     res.json(data.find(zona => zona.zona === zonaParam).restaurantes);
   } else if (zonaParam === 'centro') {
@@ -20,6 +26,17 @@ router.get('/restaurantes/:zona', (req, res) => {
   } else {
     res.json({ error: 'Zona no valida' });
   }
+});
+
+// Retorna los platillos de un restaurante dado el id por url
+router.get('/zonas/:zona/restaurantes/:id/platillos', (req, res) => {
+  const zonaUrl = req.params.zona;
+  const restauranteUrl = req.params.id;
+  const zona = data.find(item => item.zona === zonaUrl);
+  const restaurantes = zona.restaurantes;
+  const restaurant = restaurantes.find(res => res.id === restauranteUrl);
+  const platillos = restaurant.platillos;
+  res.json(platillos);
 });
 
 module.exports = router;

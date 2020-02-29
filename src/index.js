@@ -11,7 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 // Variables globales
 
 // Rutas
-app.use(routes);
+app.use('/api/', routes);
 
 // Servidor
 app.listen(process.env.PORT, () => {

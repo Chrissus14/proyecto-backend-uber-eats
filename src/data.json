@@ -5,7 +5,7 @@
     "restaurantes": [
       {
         "id": "1",
-        "nombre": "Kal",
+        "restaurante": "Kal",
         "platillos": [
           {
             "id": "1",
@@ -23,7 +23,7 @@
       },
       {
         "id": "2",
-        "nombre": "Val",
+        "restaurante": "Val",
         "platillos": [
           {
             "id": "1",
@@ -47,7 +47,7 @@
     "restaurantes": [
       {
         "id": "1",
-        "nombre": "Sal",
+        "restaurante": "Sal",
         "platillos": [
           {
             "id": "1",
@@ -61,7 +61,7 @@
       },
       {
         "id": "2",
-        "nombre": "Mal",
+        "restaurante": "Mal",
         "platillos": [
           {
             "id": "1",
