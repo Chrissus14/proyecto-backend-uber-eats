@@ -41,12 +41,22 @@ router.post('/pedidos', (req, res) => {
   const restaurantes = zona.restaurantes.find(res => res.restaurante === restauranteParam);
   const platillo = restaurantes.platillos.find(plat => plat.platillo === platilloParam);
 
-  cart.push(platillo);
+  const pedido = {
+    id: cart.length + 1,
+    platilloSelect: platillo.platillo
+  };
+  cart.push(pedido);
 
-  res.json(platillo);
+  res.json(pedido);
+});
 
-  // if (!platillo) res.status(404).json({ error: 'No existe ese platillo' });
-  // res.json(platillo);
+// Quitar platillo del carrito con su id
+router.get('/deseleccionar/:id', (req, res) => {
+  const id = req.params.id;
+  const quitar = cart.find(item => item.id === +id);
+  const indice = cart.indexOf(quitar);
+  const platilloEliminado = cart.splice(indice, 1);
+  res.json({ eliminado: platilloEliminado });
 });
 
 module.exports = router;
