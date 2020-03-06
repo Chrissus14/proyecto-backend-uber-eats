@@ -14,9 +14,9 @@ router.get('/zonas', (req, res) => {
 router.get('/zonas/:zona/restaurantes', (req, res) => {
   const zonaParam = req.params.zona;
   if (zonaParam === 'norte') {
-    res.json(data.find(zona => zona.zona === zonaParam).restaurantes);
+    return res.json(data.find(zona => zona.zona === zonaParam).restaurantes);
   } else if (zonaParam === 'centro') {
-    res.json(data.find(zona => zona.zona === zonaParam).restaurantes);
+    return res.json(data.find(zona => zona.zona === zonaParam).restaurantes);
   } else {
     res.json({ error: 'Zona no valida' });
   }
@@ -62,7 +62,7 @@ router.get('/deseleccionar/:id', (req, res) => {
 
 // Obtiene todos los platillos del carrito
 router.get('/micarrito', (req, res) => {
-  if (cart.length === 0) res.status(404).json({ error: 'No tienes pedidos aun' });
+  if (cart.length === 0) return res.status(404).json({ error: 'No tienes pedidos aun' });
   res.json(cart);
 });
 
@@ -72,7 +72,7 @@ router.get('/cancelar', (req, res) => {
   res.json({ cancel: 'Pedido cancelado' });
 });
 
-//
+// Confirma la compra, añade los items a un nuevo array y elimina los items del carrito
 router.get('/confirmar', (req, res) => {
   compra.push(cart);
   res.json({ status: 'confirmado', pedidos: compra });
