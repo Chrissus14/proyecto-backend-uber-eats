@@ -1,87 +1,82 @@
-import { Router } from 'express';
-import data from '../data.json';
-import datos from '../datos';
-import { cart, compra } from '../index';
-const router = Router();
+export default (CLIENTE, cart, compra, datos) => {
+  // Ver platillos por restaurante utlizando query string
+  // @route   GET   /api/platillos
+  //@route    GET   /api/platillos?restaurante=xxx
+  CLIENTE.get('/platillos', (req, res) => {
+    if (req.query.restaurante) {
+      const restaurante = datos.platillos.filter(
+        platillo => platillo.restaurante === req.query.restaurante
+      );
+      return res.json(restaurante);
+    }
+    res.json(datos.platillos);
+  });
 
-// const cart = [];
-// const compra = [];
+  // Ver restaurantes por zona
+  // @route   GET   /api/restaurantes/:zona
+  CLIENTE.get('/restaurantes/:zona', (req, res) => {
+    if (!req.params.zona) return res.json({ error: 'Zona no encontrada' });
+    res.json(datos.platillos.filter(zona => zona.zona === req.params.zona));
+  });
 
-// Obtiene todas las zonas
-router.get('/zonas', (req, res) => {
-  // res.json(data.map(zona => zona));
-  res.json(data);
-});
+  // Seleccionar platillos
+  // @route   POST   /api/seleccionar
+  CLIENTE.post('/seleccionar', (req, res) => {
+    const platilloSeleccionado = req.body.platillo;
 
-// Obtiene todos los restaurantes por zona
-router.get('/zonas/:zona/restaurantes', (req, res) => {
-  const zonaParam = req.params.zona;
+    if (!platilloSeleccionado || !req.body.restaurante)
+      return res.status(400).json({ error: 'debes ingresar un platillo y un restaurante' });
 
-  if (zonaParam === 'norte')
-    return res.json(data.find(zona => zona.zona === zonaParam).restaurantes);
+    if (!datos.platillos.some(platillo => platillo.nombre === platilloSeleccionado))
+      return res.status(404).json({ error: 'platillo no encontrado' });
 
-  if (zonaParam === 'centro')
-    return res.json(data.find(zona => zona.zona === zonaParam).restaurantes);
+    if (!datos.platillos.some(platillo => platillo.restaurante === req.body.restaurante))
+      return res.status(404).json({ error: 'restaurante no valido' });
 
-  res.json({ error: 'Zona no valida' });
-});
+    const pedido = {
+      id: cart.length + 1,
+      platillo: platilloSeleccionado,
+      restaurante: req.body.restaurante
+    };
 
-// Retorna los platillos de un restaurante dado el id por url
-router.get('/zonas/:zona/restaurantes/:id/platillos', (req, res) => {
-  const zonaUrl = req.params.zona;
-  const restauranteUrl = req.params.id;
+    cart.push(pedido);
+    // console.log(cart);
 
-  const zona = data.find(item => item.zona === zonaUrl);
-  const restaurantes = zona.restaurantes;
-  const restaurant = restaurantes.find(res => res.id === restauranteUrl);
-  const platillos = restaurant.platillos;
-  res.json(platillos);
-});
+    res.json({ status: 'ok', platillo: pedido.platillo, restaurante: pedido.restaurante });
+  });
 
-// Añadir pedido de platillo
-router.post('/pedidos', (req, res) => {
-  const zonaParam = req.body.zona;
-  const restauranteParam = req.body.restaurante;
-  const platilloParam = req.body.platillo;
-  const zona = data.find(zone => zone.zona === zonaParam);
-  const restaurantes = zona.restaurantes.find(res => res.restaurante === restauranteParam);
-  const platillo = restaurantes.platillos.find(plat => plat.platillo === platilloParam);
+  // Deseleccionar platillo
+  //@route DELETE   /api/deseleccionar/:id
+  CLIENTE.delete('/deseleccionar/:id', (req, res) => {
+    if (!cart.some(platillo => platillo.id === +req.params.id))
+      return res.status(404).json({ error: 'platillo no encontrado' });
 
-  const pedido = {
-    id: cart.length + 1,
-    platilloSelect: platillo.platillo
-  };
-  cart.push(pedido);
-  // console.log(cart);
-  res.json(pedido);
-});
+    const plato = cart.find(platillo => platillo.id === +req.params.id);
+    const index = cart.indexOf(plato);
+    cart.splice(index, 1);
+    console.log(cart);
+    res.json({ msj: 'platillo eliminado satisfactoriamente' });
+  });
 
-// Quitar platillo del carrito con su id
-router.get('/deseleccionar/:id', (req, res) => {
-  const id = req.params.id;
-  const quitar = cart.find(item => item.id === +id);
-  const indice = cart.indexOf(quitar);
-  const platilloEliminado = cart.splice(indice, 1);
-  res.json({ eliminado: platilloEliminado });
-});
+  // Obtiene todos los platillos del carrito (checkout del pedido)
+  // @route   GET /api/micarrito
+  CLIENTE.get('/micarrito', (req, res) => {
+    if (cart.length === 0) return res.status(404).json({ error: 'No tienes pedidos aun' });
+    res.json(cart);
+  });
 
-// Obtiene todos los platillos del carrito
-router.get('/micarrito', (req, res) => {
-  if (cart.length === 0) return res.status(404).json({ error: 'No tienes pedidos aun' });
-  res.json(cart);
-});
+  // Borrar elementos del array, cancelar pedido
+  // @route   GET   /api/cancelar
+  CLIENTE.get('/cancelar', (req, res) => {
+    cart.splice(0);
+    res.json({ cancel: 'Pedido cancelado' });
+  });
 
-// Borrar elementos del array, cancelar pedido
-router.get('/cancelar', (req, res) => {
-  cart.splice(0);
-  res.json({ cancel: 'Pedido cancelado' });
-});
-
-// Confirma la compra, añade los items a un nuevo array y elimina los items del carrito
-router.get('/confirmar', (req, res) => {
-  compra.push(cart);
-  res.json({ status: 'confirmado', pedidos: compra });
-  cart.splice(0);
-});
-
-module.exports = router;
+  // Confirma la compra, añade los items a un nuevo array y elimina los items del carrito
+  //@route    GET   /api//confirmar
+  CLIENTE.get('/confirmar', (req, res) => {
+    compra.push(...cart);
+    res.json({ status: 'confirmado', pedidos: compra });
+    cart.splice(0);
+  });
+};

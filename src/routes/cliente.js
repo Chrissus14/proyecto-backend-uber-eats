@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import datos from '../datos';
-import { cart, compra } from '../index';
+// import { cart, compra } from '../index';
 const cliente = Router();
 
 // Ver platillos por restaurante utlizando query string
