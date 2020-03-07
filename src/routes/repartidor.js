@@ -1,4 +1,4 @@
-export default (REPARTIDOR, datos, pedidosTerminados, entregas) => {
+export default (REPARTIDOR, datos, pedidosTerminados, entregas, gananciaRepartidor) => {
   // Ver lista de pedidos
   // @route GET  /api/repartidor/pedidos
   // @route GET  /api/repartidor/pedidos?aceptar=aceptar
@@ -29,5 +29,13 @@ export default (REPARTIDOR, datos, pedidosTerminados, entregas) => {
     }
 
     res.json(entregas);
+  });
+
+  REPARTIDOR.get('/ganacias', (req, res) => {
+    const ganancias = [];
+    ganancias.push(...gananciaRepartidor);
+    const misGanacias = ganancias.reduce((acumulador, valorInicial) => acumulador + valorInicial);
+    // console.log(gananciaRepartidor);
+    res.json({ misGanacias: misGanacias });
   });
 };

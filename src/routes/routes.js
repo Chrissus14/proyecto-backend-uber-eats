@@ -33,16 +33,25 @@ export default (CLIENTE, cart, compra, datos) => {
     if (!datos.platillos.some(platillo => platillo.restaurante === req.body.restaurante))
       return res.status(404).json({ error: 'restaurante no valido' });
 
+    if (!datos.platillos.some(platillo => platillo.costo === +req.body.costo))
+      return res.status(404).json({ error: 'costo incorrecto' });
+
     const pedido = {
       id: cart.length + 1,
       platillo: platilloSeleccionado,
-      restaurante: req.body.restaurante
+      restaurante: req.body.restaurante,
+      costo: +req.body.costo
     };
 
     cart.push(pedido);
     // console.log(cart);
 
-    res.json({ status: 'ok', platillo: pedido.platillo, restaurante: pedido.restaurante });
+    res.json({
+      status: 'ok',
+      platillo: pedido.platillo,
+      restaurante: pedido.restaurante,
+      costo: pedido.costo
+    });
   });
 
   // Deseleccionar platillo

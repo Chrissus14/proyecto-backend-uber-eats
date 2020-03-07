@@ -4,25 +4,29 @@ export default {
       id: '1',
       nombre: 'carnes',
       restaurante: 'val',
-      zona: 'norte'
+      zona: 'norte',
+      costo: 10
     },
     {
       id: '2',
       nombre: 'pescado',
       restaurante: 'kal',
-      zona: 'centro'
+      zona: 'centro',
+      costo: 15
     },
     {
       id: '3',
       nombre: 'hamburguesa',
       restaurante: 'kal',
-      zona: 'centro'
+      zona: 'centro',
+      costo: 20
     },
     {
       id: '4',
       nombre: 'pizza',
       restaurante: 'val',
-      zona: 'norte'
+      zona: 'norte',
+      costo: 25
     }
   ]
 };

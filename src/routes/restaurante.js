@@ -1,4 +1,4 @@
-export default (RESTAURANTE, datos, compra, pedidos, pedidosTerminados) => {
+export default (RESTAURANTE, datos, compra, pedidos, pedidosTerminados, gananciaRepartidor) => {
   // ver pedidos por aceptar
   // @route  GET   /api/restaurante/pedido
   // @route  GET  /api/restaurante/pedido?aceptar=aceptar
@@ -21,7 +21,9 @@ export default (RESTAURANTE, datos, compra, pedidos, pedidosTerminados) => {
   });
 
   // Terminar pedido
+  // Ver total vendido
   // @route GET /api/restaurante/terminados
+  // @rpute GET /api/restaurante/terminados?total=true
   RESTAURANTE.get('/terminados', (req, res) => {
     pedidosTerminados.push(...pedidos);
     pedidos.splice(0);
@@ -38,6 +40,7 @@ export default (RESTAURANTE, datos, compra, pedidos, pedidosTerminados) => {
   RESTAURANTE.post('/agregar', (req, res) => {
     const platillo = {
       id: String(datos.platillos.length + 1),
+      costo: +req.body.costo,
       ...req.body
     };
 
@@ -52,6 +55,7 @@ export default (RESTAURANTE, datos, compra, pedidos, pedidosTerminados) => {
     plato.nombre = req.body.name;
     plato.restaurante = req.body.restaurante;
     plato.zona = req.body.zona;
+    plato.costo = req.body.costo;
 
     res.json(plato);
   });
@@ -62,5 +66,20 @@ export default (RESTAURANTE, datos, compra, pedidos, pedidosTerminados) => {
       datos = datos.platillos.filter(p => p.id !== req.params.id);
       return res.json(datos.platilos);
     }
+  });
+
+  // Ver total vendido
+  RESTAURANTE.get('/total', (req, res) => {
+    const reducer = (acumulador, valorInicial) => acumulador + valorInicial;
+    const totalVendido = [];
+    const costo = pedidosTerminados.map(coste => coste.costo);
+    totalVendido.push(...costo);
+    const total = totalVendido.reduce(reducer);
+    const repartidor = total * 0.15;
+    const ventasTotales = total - repartidor;
+    gananciaRepartidor.push(repartidor);
+    // console.log(gananciaRepartidor);
+
+    res.json({ ganacias: ventasTotales });
   });
 };
