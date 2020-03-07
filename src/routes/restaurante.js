@@ -25,7 +25,7 @@ export default (RESTAURANTE, datos, compra, pedidos, pedidosTerminados) => {
   RESTAURANTE.get('/terminados', (req, res) => {
     pedidosTerminados.push(...pedidos);
     pedidos.splice(0);
-    console.log(pedidosTerminados);
+    // console.log(pedidosTerminados);
 
     if (pedidosTerminados.length === 0)
       return res.json({ pedidos: 'Aun no hay pedidos terminados' });
